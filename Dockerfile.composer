@@ -1,0 +1,10 @@
+FROM alpine:3.19
+
+RUN apk update && apk upgrade 
+
+RUN apk add curl git composer php-ctype php-session php-tokenizer php-simplexml php-xml php-dom
+
+WORKDIR /app
+
+COPY ./app /app
+

@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  adminer:
+    build: 
+      context: .
+      dockerfile: Dockerfile.adminer
+    ports:
+      - "8080:8080"
+
+  composer:
+    build:
+      context: .
+      dockerfile: Dockerfile.composer
+    volumes:
+      - ./app:/app
+    command: composer install
+    working_dir: /app
+
+
+  symfony:
+    build:
+      context: .
+      dockerfile: Dockerfile.symfony
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./app:/app
