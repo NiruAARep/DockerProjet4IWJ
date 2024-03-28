@@ -1,5 +1,13 @@
 FROM alpine:3.19
 
+ARG POSTGRES_DB
+ARG POSTGRES_USER
+ARG POSTGRES_PASSWORD
+
+ENV POSTGRES_DB=${POSTGRES_DB}
+ENV POSTGRES_USER=${POSTGRES_USER}
+ENV POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+
 RUN apk update && apk upgrade && apk add postgresql
 
 WORKDIR /run
@@ -16,13 +24,16 @@ RUN chmod 0700 /var/lib/postgresql/data
 
 RUN initdb -D /var/lib/postgresql/data
 
-RUN echo "host all all 172.24.0.1/0 md5" >> /var/lib/postgresql/data/pg_hba.conf
+RUN echo "host all all 0.0.0.0/0 md5" >> /var/lib/postgresql/data/pg_hba.conf
 
 RUN echo "listen_addresses='*'" >> /var/lib/postgresql/data/postgresql.conf
 
-# RUN psql
+# Juste vérifier si l'utilisateur ou la database existe.
+# Si une des valeur existe utiliser la valeur
+# Sinon créé la valeur
 
-#RUN pg_ctl start -D /var/lib/postgresql/data
+RUN pg_ctl start -D /var/lib/postgresql/data && \
+	psql -c "CREATE DATABASE ${POSTGRES_DB};"
 
 EXPOSE 5432
 
