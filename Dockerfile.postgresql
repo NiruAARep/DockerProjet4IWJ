@@ -33,8 +33,9 @@ RUN echo "listen_addresses='*'" >> /var/lib/postgresql/data/postgresql.conf
 # Sinon créé la valeur
 
 RUN pg_ctl start -D /var/lib/postgresql/data && \
-	psql -c "CREATE DATABASE ${POSTGRES_DB};"
+	psql -c "CREATE DATABASE ${POSTGRES_DB};" && \
+	psql -c "CREATE ROLE ${POSTGRES_USER} WITH LOGIN PASSWORD '${POSTGRES_PASSWORD}';"
 
 EXPOSE 5432
 
-CMD ["postgres", "-D", "/var/lib/postgresql/data"]
+CMD postgres -D /var/lib/postgresql/data
