@@ -1,6 +1,29 @@
 FROM alpine:3.19
 
-# RUN apk update && apk upgrade && apk add postgresql
+RUN apk update && apk upgrade && apk add postgresql
 
-# RUN mkdir /run/postgresql && chown postgres:postgres /run/postgresql/
+WORKDIR /run
 
+RUN mkdir postgresql && chown postgres:postgres /run/postgresql/
+
+WORKDIR /var/lib/postgresql
+
+USER postgres
+
+RUN mkdir data
+
+RUN chmod 0700 /var/lib/postgresql/data
+
+RUN initdb -D /var/lib/postgresql/data
+
+RUN echo "host all all 172.24.0.1/0 md5" >> /var/lib/postgresql/data/pg_hba.conf
+
+RUN echo "listen_addresses='*'" >> /var/lib/postgresql/data/postgresql.conf
+
+# RUN psql
+
+#RUN pg_ctl start -D /var/lib/postgresql/data
+
+EXPOSE 5432
+
+CMD ["postgres", "-D", "/var/lib/postgresql/data"]
