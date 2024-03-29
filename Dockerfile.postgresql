@@ -8,28 +8,26 @@ ENV POSTGRES_DB=${POSTGRES_DB}
 ENV POSTGRES_USER=${POSTGRES_USER}
 ENV POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
 
-RUN apk update && apk upgrade && apk add postgresql
+RUN apk update && \
+	apk upgrade && \
+	apk add postgresql
 
 WORKDIR /run
 
-RUN mkdir postgresql && chown postgres:postgres /run/postgresql/
+RUN mkdir postgresql && \
+	chown postgres:postgres /run/postgresql/
 
 WORKDIR /var/lib/postgresql
 
 USER postgres
 
-RUN mkdir data
-
-RUN chmod 0700 /var/lib/postgresql/data
+RUN mkdir data && \
+	chmod 0700 /var/lib/postgresql/data
 
 RUN initdb -D /var/lib/postgresql/data
 
-RUN echo "host all all 0.0.0.0/0 md5" >> /var/lib/postgresql/data/pg_hba.conf
-
-RUN echo "listen_addresses='*'" >> /var/lib/postgresql/data/postgresql.conf
-
-# Si le nom de la base de données existe déja, il faut ne pas la créer
-# si le nom du rôle user existe déja, il ne faut pas le créer
+RUN echo "host all all 0.0.0.0/0 md5" >> /var/lib/postgresql/data/pg_hba.conf && \
+	echo "listen_addresses='*'" >> /var/lib/postgresql/data/postgresql.conf
 
 RUN pg_ctl start -D /var/lib/postgresql/data && \
 	psql -c "ALTER ROLE postgres WITH PASSWORD 'password';" && \

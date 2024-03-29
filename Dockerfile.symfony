@@ -1,20 +1,7 @@
 FROM alpine:3.19
 
-ARG POSTGRES_DB
-ARG POSTGRES_USER
-ARG POSTGRES_PASSWORD
-
-
-ENV POSTGRES_DB=${POSTGRES_DB}
-ENV POSTGRES_USER=${POSTGRES_USER}
-ENV POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-
-ENV DATABASE_URL="postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?serverVersion=16&charset=utf8"
-
 RUN apk update && apk upgrade && apk add --no-cache php php-cli php-json php-phar php-openssl php-dom php-mbstring php-pdo php-pdo_pgsql php-tokenizer php-xml php-ctype php-session php-iconv php-simplexml php-intl php-xmlwriter php-fileinfo 
 
 WORKDIR /app
 
-COPY ./app /app
-
-CMD ["php", "-S", "0.0.0.0:8000", "-t", "public"]
+CMD php -S 0.0.0.0:8000 -t public 
