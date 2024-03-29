@@ -28,13 +28,13 @@ RUN echo "host all all 0.0.0.0/0 md5" >> /var/lib/postgresql/data/pg_hba.conf
 
 RUN echo "listen_addresses='*'" >> /var/lib/postgresql/data/postgresql.conf
 
-# Juste vérifier si l'utilisateur ou la database existe.
-# Si une des valeur existe utiliser la valeur
-# Sinon créé la valeur
+# Si le nom de la base de données existe déja, il faut ne pas la créer
+# si le nom du rôle user existe déja, il ne faut pas le créer
 
 RUN pg_ctl start -D /var/lib/postgresql/data && \
+	psql -c "ALTER ROLE postgres WITH PASSWORD 'password';" && \
 	psql -c "CREATE DATABASE ${POSTGRES_DB};" && \
-	psql -c "CREATE ROLE ${POSTGRES_USER} WITH LOGIN PASSWORD '${POSTGRES_PASSWORD}';"
+	psql -c "CREATE ROLE ${POSTGRES_USER} WITH LOGIN PASSWORD '${POSTGRES_PASSWORD}' SUPERUSER;"
 
 EXPOSE 5432
 
