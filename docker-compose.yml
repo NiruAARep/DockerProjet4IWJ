@@ -16,10 +16,9 @@ services:
       dockerfile: Dockerfile.composer
     volumes:
       - ./app:/app
-    command: composer install
-    working_dir: /app
     depends_on:
       - postgres
+    tty: true
 
 
   symfony:
@@ -32,3 +31,5 @@ services:
       - ./app:/app
     depends_on:
       - postgres
+      - composer
+    restart: always

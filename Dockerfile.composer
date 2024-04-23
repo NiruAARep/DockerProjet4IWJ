@@ -1,4 +1,4 @@
-FROM alpine:3.19
+FROM alpine
 
 RUN apk update && apk upgrade 
 
@@ -6,3 +6,4 @@ RUN apk add curl git composer php-ctype php-session php-tokenizer php-simplexml 
 
 WORKDIR /app
 
+CMD composer install && sh
