@@ -1,0 +1,7 @@
+FROM base-php:latest
+
+RUN apk add --no-cache composer
+
+WORKDIR /app
+
+CMD composer install && sh

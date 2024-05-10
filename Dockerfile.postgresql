@@ -1,0 +1,46 @@
+FROM alpine:latest
+
+# Définition des variables qui seront utilisées pendant la construction
+ARG POSTGRES_DB
+ARG POSTGRES_USER
+ARG POSTGRES_PASSWORD
+
+# Initialisation des variables d'environnement avec les valeurs des ARGs pour utilisation à l'exécution
+ENV POSTGRES_DB=${POSTGRES_DB}
+ENV POSTGRES_USER=${POSTGRES_USER}
+ENV POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+
+RUN apk update && \
+	apk upgrade && \
+	apk add --no-cache postgresql
+
+WORKDIR /run
+
+# Création du dossier pour les sockets postgresql
+RUN mkdir postgresql && \
+	chown postgres:postgres /run/postgresql/
+
+USER postgres
+
+WORKDIR /var/lib/postgresql
+
+# Création et sécurisation du dossier pour les données de PostgreSQL
+RUN mkdir data && \
+	chmod 0700 /var/lib/postgresql/data
+
+# Initialisation de la bdd postgres
+RUN initdb -D /var/lib/postgresql/data
+
+# Configuration pour permettre les connexions à distance sécurisées (via mot de passe)
+RUN echo "host all all 0.0.0.0/0 md5" >> /var/lib/postgresql/data/pg_hba.conf && \
+	echo "listen_addresses='*'" >> /var/lib/postgresql/data/postgresql.conf
+
+# Démarrage de PostgreSQL et configuration initiale des rôles et de la base de données
+RUN pg_ctl start -D /var/lib/postgresql/data && \
+	psql -c "ALTER ROLE postgres WITH PASSWORD 'password';" && \
+	psql -c "CREATE DATABASE ${POSTGRES_DB};" && \
+	psql -c "CREATE ROLE ${POSTGRES_USER} WITH LOGIN PASSWORD '${POSTGRES_PASSWORD}' SUPERUSER;"
+
+EXPOSE 5432
+
+CMD postgres -D /var/lib/postgresql/data
