@@ -1,8 +1,6 @@
-FROM alpine
+FROM base-php:latest
 
-RUN apk update && apk upgrade 
-
-RUN apk add curl git composer php-ctype php-session php-tokenizer php-simplexml php-xml php-dom
+RUN apk add --no-cache composer
 
 WORKDIR /app
 

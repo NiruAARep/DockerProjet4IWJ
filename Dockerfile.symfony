@@ -1,13 +1,5 @@
-FROM alpine
-
-RUN apk update && apk upgrade && apk add --no-cache php php-cli php-json php-phar php-openssl php-dom php-mbstring php-pdo php-pdo_pgsql php-tokenizer php-xml php-ctype php-session php-iconv php-simplexml php-intl php-xmlwriter php-fileinfo postgresql-client
+FROM base-php:latest
 
 WORKDIR /app
 
-CMD until pg_isready -h postgres -p 5432 -U post; do \
-    echo "Attente de la disponibilité de PostgreSQL..."; \
-    sleep 1; \
-    done \
-    && php bin/console doctrine:migrations:migrate --no-interaction \
-    && php bin/console doctrine:fixtures:load --no-interaction \
-    && php -S 0.0.0.0:8000 -t public
+CMD php -S 0.0.0.0:8000 -t public

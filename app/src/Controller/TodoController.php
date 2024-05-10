@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Doctrine\DBAL\Exception\TableNotFoundException;
 
 #[Route('/')]
 class TodoController extends AbstractController
@@ -17,9 +18,13 @@ class TodoController extends AbstractController
     #[Route('/', name: 'app_todo_index', methods: ['GET'])]
     public function index(TodoRepository $todoRepository): Response
     {
-        return $this->render('todo/index.html.twig', [
-            'todos' => $todoRepository->findAll(),
-        ]);
+        try {
+            return $this->render('todo/index.html.twig', [
+                'todos' => $todoRepository->findAll(),
+            ]);
+        } catch (TableNotFoundException $e) {
+            return new Response('Table not found', Response::HTTP_NOT_FOUND);
+        }
     }
 
     #[Route('/new', name: 'app_todo_new', methods: ['GET', 'POST'])]

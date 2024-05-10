@@ -1,11 +1,10 @@
-FROM alpine
-
-RUN apk update && apk upgrade && apk add --no-cache wget php php-cli php-json php-phar php-openssl php-dom php-mbstring php-pdo php-pdo_pgsql php-tokenizer php-xml php-ctype php-session php-iconv php-simplexml php-intl php-xmlwriter php-fileinfo
+FROM base-php:latest
 
 WORKDIR /var/www/html
 
-RUN wget https://github.com/vrana/adminer/releases/download/v4.8.1/adminer-4.8.1.php && mv adminer-4.8.1.php index.php
-
-CMD	php -S 0.0.0.0:8080 -t /var/www/html
+RUN wget https://github.com/vrana/adminer/releases/download/v4.8.1/adminer-4.8.1.php && \
+    mv adminer-4.8.1.php index.php
 
 EXPOSE 8080
+
+CMD	php -S 0.0.0.0:8080 -t /var/www/html
