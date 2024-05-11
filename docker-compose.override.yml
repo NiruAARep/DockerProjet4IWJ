@@ -4,9 +4,9 @@ services:
       context: .
       dockerfile: Dockerfile.postgresql
       args:
-        - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-'password'}
-        - POSTGRES_USER=${POSTGRES_USER:-'app'}
-        - POSTGRES_DB=${POSTGRES_DB:-'app'}
+        - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-password}
+        - POSTGRES_USER=${POSTGRES_USER:-app}
+        - POSTGRES_DB=${POSTGRES_DB:-app}
     ports:
       - "5432:5432"
     

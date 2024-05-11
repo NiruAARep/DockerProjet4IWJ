@@ -12,7 +12,7 @@ Pour construire l'image de base PHP, ouvrez un terminal à la racine du projet e
 
 ### Étape 2 : Variable d'environnements
 
-Il y a deux fichiers d'environnement à configurer. Le premier se trouve à la racine du projet et permet de configurer la création de la base de données PostgreSQL. Trois variables sont nécessaires :
+Il y a deux fichiers d'environnement à configurer. Le premier doit être créé à la racine du projet et permet de configurer la création de la base de données PostgreSQL. Trois variables sont nécessaires :
 - POSTGRES_DB : Nom de la base de données
 - POSTGRES_USER : Nom du rôle
 - POSTGRES_PASSWORD : Mot de passe du rôle
@@ -24,9 +24,10 @@ Attention :
 
 Un fichier .env.example est présent dans le projet pour rappeler les variables à saisir dans le fichier .env.
 
-Le second fichier à configurer est le fichier d'environnement du projet Symfony. La valeur à changer est la chaîne de connexion à la base de données :
+Le second fichier à configurer est le fichier d'environnement du projet Symfony, il doit être créé à la racine du projet symfony (/app), s'il n'existe pas déjà.
+La valeur à modifier est la chaîne de connexion à la base de données :
 
-DATABASE_URL="postgresql://`<POSTGRES_USER:-"app">`:`<POSTGRES_PASSWORD:-"password">`@postgres:5432/`<POSTGRES_DB:-"app">`?serverVersion=16&charset=utf8"
+DATABASE_URL="postgresql://`<POSTGRES_USER:-app>`:`<POSTGRES_PASSWORD:-password>`@postgres:5432/`<POSTGRES_DB:-app>`?serverVersion=16&charset=utf8"
 
 ### Étape 3 : Construction et démarrage des conteneurs
 
