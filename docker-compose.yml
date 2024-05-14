@@ -30,3 +30,4 @@ services:
     depends_on:
       - postgres
       - composer
+    restart: "on-failure"
